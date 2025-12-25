@@ -1,0 +1,31 @@
+# --- VS Code & Visual Studio (The ".vs" folder you saw) ---
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# --- .NET Core / Aspire Junk ---
+bin/
+obj/
+project.lock.json
+_encdata/
+Debug/
+Release/
+
+# --- Python / LangGraph Junk ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# --- SECURITY (CRITICAL) ---
+# Never commit your secrets or keys!
+appsettings.Development.json
+.env
+secrets.json
+*.pem
+*.key
