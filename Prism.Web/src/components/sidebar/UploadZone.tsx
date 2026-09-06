@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface UploadZoneProps {
+  userId: string;
   getConnectionId: () => string | null;
   joinChat: (chatId: string) => Promise<void>;
   onUploaded: (chatId: string, fileId: string, file: File) => void;
@@ -18,7 +19,7 @@ export interface UploadZoneHandle {
 }
 
 export const UploadZone = forwardRef<UploadZoneHandle, UploadZoneProps>(function UploadZone(
-  { getConnectionId, joinChat, onUploaded, refetchChats, collapsed = false },
+  { userId, getConnectionId, joinChat, onUploaded, refetchChats, collapsed = false },
   ref
 ) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -46,7 +47,7 @@ export const UploadZone = forwardRef<UploadZoneHandle, UploadZoneProps>(function
       await joinChat(chatId);
 
       const formData = new FormData();
-      formData.append("UserId", "demo-user-01");
+      formData.append("UserId", userId);
       formData.append("ConnectionId", connectionId);
       formData.append("ChatId", chatId);
       formData.append("Files", file);

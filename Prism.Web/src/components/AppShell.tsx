@@ -12,6 +12,8 @@ import { useSignalR } from "@/hooks/useSignalR";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { formatFileSize } from "@/lib/format";
 import { useSelectedClaim } from "@/contexts/SelectedClaimContext";
+import { useAuth } from "@/lib/AuthContext";
+import { GuestBanner } from "@/components/GuestBanner";
 import { cn } from "@/lib/utils";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 
@@ -41,16 +43,16 @@ function useBelowLg() {
   return belowLg;
 }
 
-const USER_ID = "demo-user-01";
-
 export function AppShell() {
   const { paperId: routeChatId } = useParams<{ paperId: string }>();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const routeClaimId = searchParams.get("claim");
+  const { user } = useAuth();
+  const userId = user?.id ?? "demo-user-01";
 
   const { activeChatId, setActiveChatId, activePaperId, setActivePaperId } = useActivePaper();
-  const { chats, refetch: refetchChats } = useChats(USER_ID);
+  const { chats, refetch: refetchChats } = useChats(userId);
   const { data: paperClaims, isLoading, refetch: refetchClaims } = usePaperClaims(activePaperId);
   const { joinChat, on, off, getConnectionId } = useSignalR();
   const { selectedClaimId, setSelectedClaimId } = useSelectedClaim();
@@ -203,6 +205,7 @@ export function AppShell() {
       )}
       <Toaster />
       <TopBar onMenuClick={() => setIsMobileSidebarOpen(true)} />
+      {user?.provider === "guest" && <GuestBanner />}
       <div
         className={cn(
           "flex flex-1 overflow-hidden transition-[grid-template-columns] duration-200 ease-smooth",
@@ -224,6 +227,7 @@ export function AppShell() {
           isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}>
           <Sidebar
+            userId={userId}
             activeChatId={activeChatId}
             chats={chats}
             refetchChats={refetchChats}
